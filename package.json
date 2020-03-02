@@ -56,13 +56,15 @@
     "node": ">=0.8.4"
   },
   "dependencies": {
-    "ws": "^7.1.2"
+    "buffer": "^5.4.3",
+    "ws": "^7.2.1"
   },
   "optionalDependencies": {
     "text-encoding": "^0.7.0",
-    "emailjs": "^2.2.0",
-    "@peculiar/webcrypto": "^1.0.22",
-    "buffer": "^5.4.3"
+    "isomorphic-webcrypto": "^2.3.2",
+    "bufferutil": "^4.0.1",
+    "utf-8-validate": "^5.0.2",
+    "emailjs": "^2.2.0"
   },
   "peerDependencies": {
     "@gooddollar/react-native-webview-crypto": "^0.*"
