@@ -2,6 +2,7 @@ import { render } from './iris/js/lib/preact.js';
 import { Router, route } from './iris/js/lib/preact-router.es.js';
 import { createHashHistory } from './iris/js/lib/history.production.min.js';
 import { Component } from './iris/js/lib/preact.js';
+import { Link } from './iris/js/lib/preact.match.js';
 
 import Helpers from './iris/js/Helpers.js';
 import { html } from './iris/js/Helpers.js';
@@ -69,14 +70,14 @@ const APPLICATIONS = [ // TODO: move editable shortcuts to localState gun
   {url: '/feed', text: t('feed'), icon: Icons.feed},
   // {url: '/store', text: t('store'), icon: Icons.store}, // restore when it works!
   {},
-  {url: '../stats.html', text: 'Gun node stats'},
-  {url: '../iris/index.html', text: 'Iris', icon: html`<img src="iris/img/icon128.png" width=24/>`},
-  {url: '../infinite-scroll/index.html', text: 'Infinite scroll'},
-  {url: '../chat/index.html', text: 'Chat'},
-  {url: '../game/space.html', text: 'Space'},
+  {url: '../stats.html', text: 'Gun node stats', native: true},
+  {url: '../iris/index.html', text: 'Iris', icon: html`<img src="iris/img/icon128.png" width=24/>`, native: true},
+  {url: '../infinite-scroll/index.html', text: 'Infinite scroll', native: true},
+  {url: '../chat/index.html', text: 'Chat', native: true},
+  {url: '../game/space.html', text: 'Space', native: true},
   {},
-  {url: 'https://gun.eco/docs/', text: 'Gun documentation'},
-  {url: 'https://examples.iris.to/components/', text: 'Iris web components'}
+  {url: 'https://gun.eco/docs/', text: 'Gun documentation', native: true},
+  {url: 'https://examples.iris.to/components/', text: 'Iris web components', native: true}
 ];
 
 const HomeView = () => {
@@ -127,10 +128,10 @@ class MenuView extends Component {
         ${APPLICATIONS.map(a => {
           if (a.url) {
             return html`
-              <a href=${a.url}>
+              <${a.native ? 'a' : Link} activeClassName="active" href=${a.url}>
                 <span class="icon">${a.icon || Icons.circle}</span>
                 <span class="text">${a.text}</span>
-              </a>`;
+              <//>`;
           } else {
             return html`<br/><br/>`;
           }
