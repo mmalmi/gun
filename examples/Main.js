@@ -154,7 +154,7 @@ class Main extends Component {
   render() {
     const content = this.state.loggedIn ? html`
       <div class="visible-xs-flex" style="border-bottom:var(--sidebar-border-right)">
-        <svg onClick=${() => State.local.get('showMenu').put(this.showMenu = !this.showMenu)} style="padding: 5px;cursor:pointer;" viewBox="0 -53 384 384" width="40px"><path d="m368 154.667969h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/><path d="m368 32h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/><path d="m368 277.332031h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/></svg>
+        <svg onClick=${() => State.local.get('showMenu').put(this.showMenu = !this.showMenu)} fill="currentColor" style="padding: 5px;cursor:pointer;" viewBox="0 -53 384 384" width="40px" height="40px"><path d="m368 154.667969h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/><path d="m368 32h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/><path d="m368 277.332031h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/></svg>
       </div>
       <section class="main" style="flex-direction: row;">
         <${MenuView}/>
