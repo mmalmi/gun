@@ -51,17 +51,6 @@ PublicMessages.init();
 
 Helpers.checkColorScheme();
 
-function handleRoute(e) {
-  document.title = 'GUN — the database for freedom fighters';
-  const activeRoute = e.url;
-  if (!activeRoute && window.location.hash) {
-    return route(window.location.hash.replace('#', '')); // bubblegum fix back navigation
-  }
-  const activeProfile = activeRoute.indexOf('/profile') === 0 ? activeRoute.replace('/profile/', '') : null;
-  localState.get('activeRoute').put(activeRoute);
-  QRScanner.cleanupScanner();
-}
-
 const APPLICATIONS = [ // TODO: move editable shortcuts to localState gun
   {url: '/', text: t('home'), icon: Icons.home},
   {url: '/settings', text: t('settings'), icon: Icons.settings},
@@ -111,55 +100,56 @@ const HomeView = () => {
   `;
 };
 
-class MenuView extends Component {
-  componentDidMount() {
-    State.local.get('showMenu').on(showMenu => this.setState({showMenu}));
-  }
-
-  render() {
-    const pub = Session.getPubKey();
-    return html`
-      <div class="application-list ${this.state.showMenu ? 'menu-visible-xs' : ''}">
-        <a href="/profile/${pub}">
-          <span class="icon"><${Identicon} str=${pub} width=40/></span>
-          <span class="text" style="font-size: 1.2em;border:0;margin-left: 7px;"><iris-text user="${pub}" path="profile/name" editable="false"/></span>
-        </a>
-        <br/><br/>
-        ${APPLICATIONS.map(a => {
-          if (a.url) {
-            return html`
-              <${a.native ? 'a' : Link} activeClassName="active" href=${a.url}>
-                <span class="icon">${a.icon || Icons.circle}</span>
-                <span class="text">${a.text}</span>
-              <//>`;
-          } else {
-            return html`<br/><br/>`;
-          }
-        })}
-      </div>
-    `;
-  }
+const MenuView = () => {
+  const pub = Session.getPubKey();
+  return html`
+    <div class="application-list">
+      <a href="/profile/${pub}">
+        <span class="icon"><${Identicon} str=${pub} width=40/></span>
+        <span class="text" style="font-size: 1.2em;border:0;margin-left: 7px;"><iris-text user="${pub}" path="profile/name" editable="false"/></span>
+      </a>
+      <br/><br/>
+      ${APPLICATIONS.map(a => {
+        if (a.url) {
+          return html`
+            <${a.native ? 'a' : Link} activeClassName="active" href=${a.url}>
+              <span class="icon">${a.icon || Icons.circle}</span>
+              <span class="text">${a.text}</span>
+            <//>`;
+        } else {
+          return html`<br/><br/>`;
+        }
+      })}
+    </div>
+  `;
 };
 
 class Main extends Component {
-  constructor() {
-    super();
-    this.showMenu = false;
-  }
-
   componentDidMount() {
     localState.get('loggedIn').on(loggedIn => this.setState({loggedIn}));
+  }
+
+  handleRoute(e) {
+    this.setState({showMenu: false});
+    document.title = 'GUN — the database for freedom fighters';
+    const activeRoute = e.url;
+    if (!activeRoute && window.location.hash) {
+      return route(window.location.hash.replace('#', '')); // bubblegum fix back navigation
+    }
+    const activeProfile = activeRoute.indexOf('/profile') === 0 ? activeRoute.replace('/profile/', '') : null;
+    State.local.get('activeRoute').put(activeRoute);
+    QRScanner.cleanupScanner();
   }
 
   render() {
     const content = this.state.loggedIn ? html`
       <div class="visible-xs-flex" style="border-bottom:var(--sidebar-border-right)">
-        <svg onClick=${() => State.local.get('showMenu').put(this.showMenu = !this.showMenu)} fill="currentColor" style="padding: 5px;cursor:pointer;" viewBox="0 -53 384 384" width="40px" height="40px"><path d="m368 154.667969h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/><path d="m368 32h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/><path d="m368 277.332031h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/></svg>
+        <svg onClick=${() => this.setState({showMenu:!this.state.showMenu})} fill="currentColor" style="padding: 5px;cursor:pointer;" viewBox="0 -53 384 384" width="40px" height="40px"><path d="m368 154.667969h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/><path d="m368 32h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/><path d="m368 277.332031h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/></svg>
       </div>
-      <section class="main" style="flex-direction: row;">
+      <section class="main ${this.state.showMenu ? 'menu-visible-xs' : ''}" style="flex-direction: row;">
         <${MenuView}/>
-        <div style="flex: 3; display: flex">
-          <${Router} history=${createHashHistory()} onChange=${e => handleRoute(e)}>
+        <div class="view-area" onClick=${() => this.state.showMenu && this.setState({showMenu: false})}>
+          <${Router} history=${createHashHistory()} onChange=${e => this.handleRoute(e)}>
             <${HomeView} path="/"/>
             <${FeedView} path="/feed"/>
             <${Login} path="/login"/>
