@@ -2,6 +2,7 @@ import { render } from './iris/js/lib/preact.js';
 import { Router, route } from './iris/js/lib/preact-router.es.js';
 import { createHashHistory } from './iris/js/lib/history.production.min.js';
 import { Component } from './iris/js/lib/preact.js';
+import { Link } from './iris/js/lib/preact.match.js';
 
 import Helpers from './iris/js/Helpers.js';
 import { html } from './iris/js/Helpers.js';
@@ -69,14 +70,14 @@ const APPLICATIONS = [ // TODO: move editable shortcuts to localState gun
   {url: '/feed', text: t('feed'), icon: Icons.feed},
   // {url: '/store', text: t('store'), icon: Icons.store}, // restore when it works!
   {},
-  {url: '../stats.html', text: 'Gun node stats'},
-  {url: '../iris/index.html', text: 'Iris', icon: html`<img src="iris/img/icon128.png" width=24/>`},
-  {url: '../infinite-scroll/index.html', text: 'Infinite scroll'},
-  {url: '../chat/index.html', text: 'Chat'},
-  {url: '../game/space.html', text: 'Space'},
+  {url: '../stats.html', text: 'Gun node stats', native: true},
+  {url: '../iris/index.html', text: 'Iris', icon: html`<img src="iris/img/icon128.png" width=24/>`, native: true},
+  {url: '../infinite-scroll/index.html', text: 'Infinite scroll', native: true},
+  {url: '../chat/index.html', text: 'Chat', native: true},
+  {url: '../game/space.html', text: 'Space', native: true},
   {},
-  {url: 'https://gun.eco/docs/', text: 'Gun documentation'},
-  {url: 'https://examples.iris.to/components/', text: 'Iris web components'}
+  {url: 'https://gun.eco/docs/', text: 'Gun documentation', native: true},
+  {url: 'https://examples.iris.to/components/', text: 'Iris web components', native: true}
 ];
 
 const HomeView = () => {
@@ -127,10 +128,10 @@ class MenuView extends Component {
         ${APPLICATIONS.map(a => {
           if (a.url) {
             return html`
-              <a href=${a.url}>
+              <${a.native ? 'a' : Link} activeClassName="active" href=${a.url}>
                 <span class="icon">${a.icon || Icons.circle}</span>
                 <span class="text">${a.text}</span>
-              </a>`;
+              <//>`;
           } else {
             return html`<br/><br/>`;
           }
@@ -153,7 +154,7 @@ class Main extends Component {
   render() {
     const content = this.state.loggedIn ? html`
       <div class="visible-xs-flex" style="border-bottom:var(--sidebar-border-right)">
-        <svg onClick=${() => State.local.get('showMenu').put(this.showMenu = !this.showMenu)} style="padding: 5px;cursor:pointer;" viewBox="0 -53 384 384" width="40px"><path d="m368 154.667969h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/><path d="m368 32h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/><path d="m368 277.332031h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/></svg>
+        <svg onClick=${() => State.local.get('showMenu').put(this.showMenu = !this.showMenu)} fill="currentColor" style="padding: 5px;cursor:pointer;" viewBox="0 -53 384 384" width="40px" height="40px"><path d="m368 154.667969h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/><path d="m368 32h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/><path d="m368 277.332031h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/></svg>
       </div>
       <section class="main" style="flex-direction: row;">
         <${MenuView}/>
@@ -163,7 +164,7 @@ class Main extends Component {
             <${FeedView} path="/feed"/>
             <${Login} path="/login"/>
             <${ChatView} path="/chat/:id?"/>
-            <${MessageView} path="/message/:hash"/>
+            <${MessageView} path="/post/:hash"/>
             <${Settings} path="/settings" showSwitchAccount=${true}/>
             <${LogoutConfirmation} path="/logout"/>
             <${Profile.Profile} path="/profile/:id?"/>
